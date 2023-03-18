@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Audio Recorder</title>
+	<style type="text/css">
+		button {
+			padding: 10px;
+			font-size: 20px;
+			border-radius: 5px;
+			margin: 10px;
+			cursor: pointer;
+		}
+		#start-btn {
+			background-color: green;
+			color: white;
+		}
+		#stop-btn {
+			background-color: blue;
+			color: white;
+		}
+		#stop-btn.recording {
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+    <h1>Record Audio</h1>
+    
+    <button id="start-button" style="background-color: green">Start Recording</button>
+    <button id="stop-button" style="background-color: blue" disabled>Stop Recording</button>
+    <button id="play-button" style="background-color: grey" disabled>Play Recording</button>
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+    
+        const startButton = document.getElementById("start-button");
+        const stopButton = document.getElementById("stop-button");
+        const playButton = document.getElementById("play-button");
+    
+    
+        startButton.addEventListener("click", startRecording);
+        stopButton.addEventListener("click", stopRecording);
+        playButton.addEventListener("click", playRecording);
+   
+    
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({audio: true})
+            .then(function(stream) {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+    
+                startButton.style.backgroundColor = "grey";
+                startButton.disabled = true;
+    
+                stopButton.style.backgroundColor = "blue";
+                stopButton.disabled = false;
+    
+                recordedChunks = [];
+                mediaRecorder.addEventListener("dataavailable", function(event) {
+                    recordedChunks.push(event.data);
+                });
+    
+                mediaRecorder.addEventListener("stop", function() {
+                    playButton.style.backgroundColor = "grey";
+                    playButton.disabled = false;
+    
+    
+                    startButton.style.backgroundColor = "green";
+                    startButton.disabled = false;
+    
+                    stopButton.style.backgroundColor = "blue";
+                    stopButton.disabled = true;
+                });
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+        }
+    
+        function stopRecording() {
+            mediaRecorder.stop();
+
+            const audioBlob = new Blob(recordedChunks, {type: "audio/wav"});
+            const audioFilename = "recording.wav"; // replace with your desired filename
+            const formData = new FormData();
+            formData.append("audio_data", audioBlob);
+            formData.append("audio_filename", audioFilename);
+
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("Recording saved.");
+                }
+            }
+            xhr.open("POST", "process_audio.php");
+            xhr.send(formData);
+        }
+
+
+
+    
+        function playRecording() {
+            const audioBlob = new Blob(recordedChunks, {type: "audio/wav"});
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            audio.play();
+            console.log("Recording played.");
+        }
+    
+    </script>    
+</body>
+</html>
