@@ -82,18 +82,15 @@
 
             const audioBlob = new Blob(recordedChunks, {type: "audio/wav"});
             const audioFilename = "recording.wav"; // replace with your desired filename
-            const formData = new FormData();
-            formData.append("audio_data", audioBlob);
-            formData.append("audio_filename", audioFilename);
+            const audioUrl = URL.createObjectURL(audioBlob);
 
-            const xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log("Recording saved.");
-                }
-            }
-            xhr.open("POST", "process_audio.php");
-            xhr.send(formData);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = audioUrl;
+            downloadLink.download = audioFilename;
+
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
         }
 
 
