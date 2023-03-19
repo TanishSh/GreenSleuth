@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Audio Recorder</title>
+	<style type="text/css"></style>
+    <style>
+        .left{
+            float:left;
+            max-width:500rem;
+        }
+        .right{
+            text-align:right;
+            max-width:300rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Police Officer's Report</h1>
+    <iframe
+    id="map"
+    class="left"
+  width="600"
+  height="450"
+  style="border:0"
+  loading="lazy"
+  allowfullscreen
+  referrerpolicy="no-referrer-when-downgrade"
+  src="https://www.google.com/maps/embed/v1/search?key=AIzaSyD_ils9W_xYR9QAd5ZORGl8aF4pU0N4jTA&q=near+100&center=43.65829859999999,-79.3807846">
+</iframe>
+    <h2 id="report" class="right"> <br> Address: - 350 Victoria St<br></h2>
+    <h2 id="report" class="right">Situation: - Man armed with gun<br></h2>
+    <h2 id="report" class="right"> - Threatening to kill people<br> </h2>
+    <h2 id="coordinate" class="right"></h3>
+    
+    
+    <script>
+        // fetch(" http://127.0.0.1:5000/upload")
+        // .then(function(response) {return response.json()})
+        // .then(function(response) { console.log(response.json())})
+
+        url = "http://127.0.0.1:5000/upload"
+        fetch(url)
+        .then(function(response){return response.json()})
+        .then(function(response) {
+            console.log(response);
+            //document.getElementById("report").innerHTTML = JSON.stringify(response.report);
+            //document.getElementById("map").src = JSON.stringify(response.map);
+
+            document.getElementById("coordinate").innerHTML = JSON.stringify(response.coordinate);
+            
+        })
+
+
+
+
+    </script>    
+</body>
+</html>
