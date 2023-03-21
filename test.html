@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Create a JSON string from a JavaScript object.</h2>
+<p id="p1"></p>
+<p id="p2"></p>
+<p id="p3"></p>
+
+<script>
+const obj = {name: "John", age: 30, city: "New York \n is \n shit"};
+const str = JSON.stringify(obj.city);
+var lines = str.split('\\n');
+
+console.log(typeof lines)
+
+document.getElementById("p1").innerHTML = lines[0];
+document.getElementById("p2").innerHTML = lines[1];
+document.getElementById("p3").innerHTML = lines[2];
+
+
+</script>
+
+</body>
+</html>
